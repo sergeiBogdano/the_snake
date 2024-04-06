@@ -43,22 +43,24 @@ clock = pygame.time.Clock()
 
 # Базовый класс игровых объектов:
 class GameObject:
+    """Базовый класс игровых объектов."""
     def __init__(self, position, body_color):
         self.position = position
         self.body_color = body_color
-
+        """Класс для отрисовки объектов."""
     def draw(self, surface):
         pass  # Этот метод будет переопределен в дочерних классах
 
 
 # Класс для яблока:
 class Apple(GameObject):
+    """Класс для яблока."""
     def __init__(self):
         x = random.randint(0, GRID_WIDTH - 1) * GRID_SIZE
         y = random.randint(0, GRID_HEIGHT - 1) * GRID_SIZE
         position = (x, y)
         super().__init__(position, APPLE_COLOR)
-
+    """Класс для отрисовки яблок."""
     def draw(self, surface):
         rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(surface, self.body_color, rect)
@@ -67,6 +69,7 @@ class Apple(GameObject):
 
 # Класс для змейки:
 class Snake(GameObject):
+    """Класс для змейки."""
     def __init__(self):
         x = GRID_WIDTH // 2 * GRID_SIZE
         y = GRID_HEIGHT // 2 * GRID_SIZE
@@ -76,7 +79,7 @@ class Snake(GameObject):
         self.next_direction = None
         self.length = 1
         self.last = None
-
+    """Класс для отрисовки змейки."""
     def draw(self, surface):
         for position in self.positions[:-1]:
             rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
@@ -85,7 +88,7 @@ class Snake(GameObject):
         head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(surface, self.body_color, head_rect)
         pygame.draw.rect(surface, BORDER_COLOR, head_rect, 1)
-
+    """Класс для перемещения змейки."""
     def move(self):
         self.update_direction()
         head_x, head_y = self.positions[0]
@@ -97,16 +100,16 @@ class Snake(GameObject):
         self.positions.insert(0, new_head)
         if len(self.positions) > self.length:
             self.positions.pop()
-
+    """Класс для обновления действий змейки."""
     def update_direction(self):
         if self.next_direction:
             self.direction = self.next_direction
             self.next_direction = None
-
+    """Класс для изменения движения змейки."""
     def change_direction(self, direction):
         if direction in (UP, DOWN, LEFT, RIGHT):
             self.next_direction = direction
-
+    """Класс для проверки съеденных яблок."""
     def eat(self, apple):
         if self.positions[0] == apple.position:
             self.length += 1
