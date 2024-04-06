@@ -97,9 +97,10 @@ class Snake(GameObject):
         self.update_direction()
         head_x, head_y = self.positions[0]
         dx, dy = self.direction
-        new_head = ((head_x + dx * GRID_SIZE) % SCREEN_WIDTH, (
-                head_y + dy * GRID_SIZE) % SCREEN_HEIGHT
-                    )
+        new_head = (
+            (head_x + dx * GRID_SIZE) % SCREEN_WIDTH,
+            (head_y + dy * GRID_SIZE) % SCREEN_HEIGHT
+        )
         if new_head in self.positions:
             raise Exception('Game Over - Snake Collided with Itself')
         self.last = self.positions[-1]
