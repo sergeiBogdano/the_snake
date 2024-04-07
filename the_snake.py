@@ -29,7 +29,7 @@ APPLE_COLOR = (255, 0, 0)
 SNAKE_COLOR = (0, 255, 0)
 
 # Скорость движения змейки:
-SPEED = 10
+SPEED = 20
 
 # Настройка игрового окна:
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
@@ -44,7 +44,7 @@ clock = pygame.time.Clock()
 class GameObject:
     """Базовый класс игровых объектов."""
 
-    def __init__(self, position, body_color):
+    def __init__(self, position=(0, 0), body_color=(0, 255, 0)):
         self.position = position
         self.body_color = body_color
 
@@ -57,10 +57,15 @@ class Apple(GameObject):
     """Класс для яблока."""
 
     def __init__(self):
-        x = random.randint(0, GRID_WIDTH - 1) * GRID_SIZE
-        y = random.randint(0, GRID_HEIGHT - 1) * GRID_SIZE
-        position = (x, y)
-        super().__init__(position, APPLE_COLOR)
+        self.randomize_position()  # Инициализация сразу с рандомной позицией
+        super().__init__(self.position, APPLE_COLOR)
+
+    def randomize_position(self):
+        """Случайное изменение позиции яблока."""
+        self.position = (
+            random.randint(0, GRID_WIDTH - 1) * GRID_SIZE,
+            random.randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+        )
 
     def draw(self, surface):
         """Класс для отрисовки яблок."""
@@ -75,7 +80,7 @@ class Snake(GameObject):
     def __init__(self):
         x = GRID_WIDTH // 2 * GRID_SIZE
         y = GRID_HEIGHT // 2 * GRID_SIZE
-        super().__init__((x, y), SNAKE_COLOR)
+        super().__init__((x, y), SNAKE_COLOR)  # Передаем начальную позицию и цвет змейки
         self.positions = [(x, y)]
         self.direction = RIGHT
         self.next_direction = None
@@ -83,7 +88,7 @@ class Snake(GameObject):
         self.last = None
 
     def draw(self, surface):
-        """для отрисовки змейки."""
+        """Метод для отрисовки змейки."""
         for position in self.positions[:-1]:
             rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(surface, self.body_color, rect)
@@ -93,7 +98,7 @@ class Snake(GameObject):
         pygame.draw.rect(surface, BORDER_COLOR, head_rect, 1)
 
     def move(self):
-        """для перемещения змейки."""
+        """Метод для перемещения змейки."""
         self.update_direction()
         head_x, head_y = self.positions[0]
         dx, dy = self.direction
@@ -102,31 +107,43 @@ class Snake(GameObject):
             (head_y + dy * GRID_SIZE) % SCREEN_HEIGHT
         )
         if new_head in self.positions:
-            raise Exception('Game Over - Snake Collided with Itself')
+            self.reset()  # Вызываем метод reset при столкновении змейки с собой
+            return
         self.last = self.positions[-1]
         self.positions.insert(0, new_head)
         if len(self.positions) > self.length:
             self.positions.pop()
 
     def update_direction(self):
-        """для обновления действий змейки."""
+        """Метод для обновления направления движения змейки."""
         if self.next_direction:
             self.direction = self.next_direction
             self.next_direction = None
 
     def change_direction(self, direction):
-        """для изменения движения змейки."""
+        """Метод для изменения направления движения змейки."""
         if direction in (UP, DOWN, LEFT, RIGHT):
             self.next_direction = direction
 
     def eat(self, apple):
-        """Класс для проверки съеденных яблок."""
+        """Метод для проверки съедания яблока змейкой."""
         if self.positions[0] == apple.position:
             self.length += 1
-            apple.position = (
-                random.randint(0, GRID_WIDTH - 1) * GRID_SIZE,
-                random.randint(0, GRID_HEIGHT - 1) * GRID_SIZE
-            )
+            apple.randomize_position()  # Случайная установка новой позиции яблока
+
+    def get_head_position(self):
+        """Метод для получения текущей позиции головы змейки."""
+        return self.positions[0]
+
+    def reset(self):
+        """Метод для сброса состояния змейки."""
+        x = GRID_WIDTH // 2 * GRID_SIZE
+        y = GRID_HEIGHT // 2 * GRID_SIZE
+        self.positions = [(x, y)]
+        self.direction = RIGHT
+        self.next_direction = None
+        self.length = 1
+        self.last = None
 
 
 def handle_keys(game_object):
@@ -138,7 +155,7 @@ def handle_keys(game_object):
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP and game_object.direction != DOWN:
                 game_object.next_direction = UP
-            elif event.key == pygame.K_DOWM and game_object.direction != UP:
+            elif event.key == pygame.K_DOWN and game_object.direction != UP:
                 game_object.next_direction = DOWN
             elif event.key == pygame.K_LEFT and game_object.direction != RIGHT:
                 game_object.next_direction = LEFT
