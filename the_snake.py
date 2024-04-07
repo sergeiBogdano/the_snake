@@ -80,7 +80,7 @@ class Snake(GameObject):
     def __init__(self):
         x = GRID_WIDTH // 2 * GRID_SIZE
         y = GRID_HEIGHT // 2 * GRID_SIZE
-        super().__init__((x, y), SNAKE_COLOR)  # Передаем начальную позицию и цвет змейки
+        super().__init__((x, y), SNAKE_COLOR)
         self.positions = [(x, y)]
         self.direction = RIGHT
         self.next_direction = None
@@ -107,7 +107,7 @@ class Snake(GameObject):
             (head_y + dy * GRID_SIZE) % SCREEN_HEIGHT
         )
         if new_head in self.positions:
-            self.reset()  # Вызываем метод reset при столкновении змейки с собой
+            self.reset()
             return
         self.last = self.positions[-1]
         self.positions.insert(0, new_head)
@@ -129,7 +129,7 @@ class Snake(GameObject):
         """Метод для проверки съедания яблока змейкой."""
         if self.positions[0] == apple.position:
             self.length += 1
-            apple.randomize_position()  # Случайная установка новой позиции яблока
+            apple.randomize_position()
 
     def get_head_position(self):
         """Метод для получения текущей позиции головы змейки."""
