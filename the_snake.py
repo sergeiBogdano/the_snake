@@ -145,9 +145,9 @@ def handle_keys(game_object):
             elif event.key == pg.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
             elif event.key == pg.K_EQUALS:
-                SPEED += 1  # Увеличиваем скорость змейки
+                SPEED += 1
             elif event.key == pg.K_MINUS:
-                SPEED = max(1, SPEED - 1)  # Уменьшаем скорость змейки, не менее 1
+                SPEED = max(1, SPEED - 1)
 
 
 def handle_keys(game_object):
