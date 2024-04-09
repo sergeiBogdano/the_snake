@@ -51,11 +51,11 @@ class GameObject:
 class Apple(GameObject):
     """Класс для яблока."""
 
-    def __init__(self, snake_position, body_color=APPLE_COLOR):
-        super().__init__(body_color=body_color)
+    def __init__(self, snake_position=None):
+        super().__init__(body_color=APPLE_COLOR)
         self.randomize_position(snake_position)
 
-    def randomize_position(self, snake_position):
+    def randomize_position(self, snake_position=None):
         """Метод для случайного изменения позиции яблока."""
         while True:
             new_position = (
@@ -76,12 +76,13 @@ class Apple(GameObject):
 class Snake(GameObject):
     """Класс для змейки."""
 
-    def __init__(self, center_position, body_color=SNAKE_COLOR):
-        super().__init__(position=center_position, body_color=body_color)
+    def __init__(self, center_position=(0, 0)):
+        super().__init__(position=center_position, body_color=SNAKE_COLOR)
         self.direction = RIGHT
         self.next_direction = None
         self.length = 0
         self.tail = []
+        self.positions = []  # Атрибут для хранения позиций змейки
 
     def draw(self):
         """Метод для отрисовки змейки на экране."""
@@ -106,6 +107,9 @@ class Snake(GameObject):
             (self.position[0] + dx * GRID_SIZE) % SCREEN_WIDTH,
             (self.position[1] + dy * GRID_SIZE) % SCREEN_HEIGHT
         )
+        self.positions.insert(0, self.position)  # Добавляем текущую позицию в список позиций
+        if len(self.positions) > self.length + 1:
+            self.positions.pop()
 
     def update_direction(self):
         """Метод для обновления направления движения змейки."""
@@ -119,13 +123,18 @@ class Snake(GameObject):
             self.length += 1
             apple.randomize_position(self.tail + [self.position])
 
-    def reset(self, center_position):
+    def reset(self, center_position=(0, 0)):
         """Метод для сброса состояния змейки."""
         self.position = center_position
         self.direction = RIGHT
         self.next_direction = None
         self.length = 0
         self.tail = []
+        self.positions = []  # Сбрасываем список позиций змейки
+
+    def get_head_position(self):
+        """Метод для получения текущей позиции головы змейки."""
+        return self.positions[0]
 
 
 def handle_keys(game_object):
@@ -145,32 +154,12 @@ def handle_keys(game_object):
             elif event.key == pg.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
             elif event.key == pg.K_EQUALS:
-                SPEED += 1
+                SPEED += 1  # Увеличиваем скорость змейки
             elif event.key == pg.K_MINUS:
-                SPEED = max(1, SPEED - 1)
-
-
-def handle_keys(game_object):
-    """Функция обработки действий пользователя."""
-    global SPEED
-
-    keys_pressed = pg.key.get_pressed()
-
-    if keys_pressed[pg.K_UP] and game_object.direction != DOWN:
-        game_object.next_direction = UP
-    elif keys_pressed[pg.K_DOWN] and game_object.direction != UP:
-        game_object.next_direction = DOWN
-    elif keys_pressed[pg.K_LEFT] and game_object.direction != RIGHT:
-        game_object.next_direction = LEFT
-    elif keys_pressed[pg.K_RIGHT] and game_object.direction != LEFT:
-        game_object.next_direction = RIGHT
-    elif keys_pressed[pg.K_EQUALS]:
-        SPEED += 1
-    elif keys_pressed[pg.K_MINUS]:
-        SPEED = max(1, SPEED - 1)
-    elif keys_pressed[pg.K_ESCAPE]:
-        pg.quit()
-        raise SystemExit
+                SPEED = max(1, SPEED - 1)  # Уменьшаем скорость змейки, не менее 1
+            elif event.key == pg.K_ESCAPE:
+                pg.quit()
+                raise SystemExit
 
 
 def main():
@@ -199,6 +188,7 @@ def main():
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     running = False
+
         screen.fill(BOARD_BACKGROUND_COLOR)
         snake.draw()
         apple.draw()
