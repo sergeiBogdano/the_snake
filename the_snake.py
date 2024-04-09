@@ -82,7 +82,7 @@ class Snake(GameObject):
         self.next_direction = None
         self.length = 0
         self.tail = []
-        self.positions = []  # Атрибут для хранения позиций змейки
+        self.positions = []
 
     def draw(self):
         """Метод для отрисовки змейки на экране."""
@@ -107,7 +107,7 @@ class Snake(GameObject):
             (self.position[0] + dx * GRID_SIZE) % SCREEN_WIDTH,
             (self.position[1] + dy * GRID_SIZE) % SCREEN_HEIGHT
         )
-        self.positions.insert(0, self.position)  # Добавляем текущую позицию в список позиций
+        self.positions.insert(0, self.position)
         if len(self.positions) > self.length + 1:
             self.positions.pop()
 
@@ -130,7 +130,7 @@ class Snake(GameObject):
         self.next_direction = None
         self.length = 0
         self.tail = []
-        self.positions = []  # Сбрасываем список позиций змейки
+        self.positions = []
 
     def get_head_position(self):
         """Метод для получения текущей позиции головы змейки."""
@@ -154,9 +154,9 @@ def handle_keys(game_object):
             elif event.key == pg.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
             elif event.key == pg.K_EQUALS:
-                SPEED += 1  # Увеличиваем скорость змейки
+                SPEED += 1
             elif event.key == pg.K_MINUS:
-                SPEED = max(1, SPEED - 1)  # Уменьшаем скорость змейки, не менее 1
+                SPEED = max(1, SPEED - 1)
             elif event.key == pg.K_ESCAPE:
                 pg.quit()
                 raise SystemExit
