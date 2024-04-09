@@ -139,7 +139,6 @@ class Snake(GameObject):
 
 def handle_keys(game_object):
     """Функция обработки действий пользователя."""
-    global SPEED
     for event in pg.event.get():
         if event.type == pg.QUIT:
             pg.quit()
@@ -153,13 +152,6 @@ def handle_keys(game_object):
                 game_object.next_direction = LEFT
             elif event.key == pg.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
-            elif event.key == pg.K_EQUALS:
-                SPEED += 1
-            elif event.key == pg.K_MINUS:
-                SPEED = max(1, SPEED - 1)
-            elif event.key == pg.K_ESCAPE:
-                pg.quit()
-                raise SystemExit
 
 
 def main():
