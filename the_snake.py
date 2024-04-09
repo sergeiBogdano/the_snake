@@ -145,38 +145,32 @@ def handle_keys(game_object):
             elif event.key == pg.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
             elif event.key == pg.K_EQUALS:
-                SPEED += 1
+                SPEED += 1  # Увеличиваем скорость змейки
             elif event.key == pg.K_MINUS:
-                SPEED = max(1, SPEED - 1)
+                SPEED = max(1, SPEED - 1)  # Уменьшаем скорость змейки, не менее 1
 
 
 def handle_keys(game_object):
     """Функция обработки действий пользователя."""
     global SPEED
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            pg.quit()
-            raise SystemExit
-        elif event.type == pg.KEYDOWN:
-            if event.key == pg.K_UP:
-                if game_object.direction != DOWN:
-                    game_object.next_direction = UP
-            elif event.key == pg.K_DOWN:
-                if game_object.direction != UP:
-                    game_object.next_direction = DOWN
-            elif event.key == pg.K_LEFT:
-                if game_object.direction != RIGHT:
-                    game_object.next_direction = LEFT
-            elif event.key == pg.K_RIGHT:
-                if game_object.direction != LEFT:
-                    game_object.next_direction = RIGHT
-            elif event.key == pg.K_EQUALS:
-                SPEED += 1
-            elif event.key == pg.K_MINUS:
-                SPEED = max(1, SPEED - 1)
-            elif event.key == pg.K_ESCAPE:
-                pg.quit()
-                raise SystemExit
+
+    keys_pressed = pg.key.get_pressed()
+
+    if keys_pressed[pg.K_UP] and game_object.direction != DOWN:
+        game_object.next_direction = UP
+    elif keys_pressed[pg.K_DOWN] and game_object.direction != UP:
+        game_object.next_direction = DOWN
+    elif keys_pressed[pg.K_LEFT] and game_object.direction != RIGHT:
+        game_object.next_direction = LEFT
+    elif keys_pressed[pg.K_RIGHT] and game_object.direction != LEFT:
+        game_object.next_direction = RIGHT
+    elif keys_pressed[pg.K_EQUALS]:
+        SPEED += 1
+    elif keys_pressed[pg.K_MINUS]:
+        SPEED = max(1, SPEED - 1)
+    elif keys_pressed[pg.K_ESCAPE]:
+        pg.quit()
+        raise SystemExit
 
 
 def main():
@@ -195,19 +189,16 @@ def main():
         snake.update_direction()
         snake.move()
         snake.eat(apple)
+
         if snake.position in snake.tail:
             snake.reset((center_x, center_y))
 
-        if snake.position in snake.tail:
-            snake.reset()
-            
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     running = False
-
         screen.fill(BOARD_BACKGROUND_COLOR)
         snake.draw()
         apple.draw()
