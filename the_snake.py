@@ -180,6 +180,7 @@ def main():
         pg.display.update()
 
     pg.quit()
+    
 
 if __name__ == '__main__':
     main()
