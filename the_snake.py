@@ -179,9 +179,7 @@ def main():
         apple.draw()
         pg.display.update()
 
-
     pg.quit()
-
 
 if __name__ == '__main__':
     main()
