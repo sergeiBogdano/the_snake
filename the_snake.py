@@ -55,13 +55,13 @@ class Apple(GameObject):
         super().__init__(body_color=APPLE_COLOR)
         self.randomize_position()
 
-    def randomize_position(self, snake_position=None):
+    def randomize_position(self, snake_positions=None):
         """Метод для случайного изменения позиции яблока."""
         while True:
             x = random.randint(0, GRID_WIDTH - 1) * GRID_SIZE
             y = random.randint(0, GRID_HEIGHT - 1) * GRID_SIZE
             new_position = (x, y)
-            if snake_position is None or new_position not in snake_position:
+            if snake_positions is None or new_position not in snake_positions:
                 self.position = new_position
                 break
 
@@ -100,19 +100,13 @@ class Snake(GameObject):
         """Метод для перемещения змейки."""
         if self.length > 0:
             self.positions.insert(0, self.position)
-            last = self.positions.pop() if len(self.positions) > self.length + 1 else None
+            self.positions.pop() if len(self.positions) > self.length + 1 else None
 
         dx, dy = self.direction
-
-
         head_x, head_y = self.positions[0]
-
-        new_head = (
-            (head_x + dx * GRID_SIZE) % SCREEN_WIDTH,
-            (head_y + dy * GRID_SIZE) % SCREEN_HEIGHT
-        )
-
-        self.position = new_head
+        new_head_x = (head_x + dx * GRID_SIZE) % SCREEN_WIDTH
+        new_head_y = (head_y + dy * GRID_SIZE) % SCREEN_HEIGHT
+        self.position = (new_head_x, new_head_y)
 
     def update_direction(self):
         """Метод для обновления направления движения змейки."""
@@ -132,7 +126,6 @@ class Snake(GameObject):
         self.next_direction = None
         self.length = 1
         self.positions = [self.position]
-
 
     def get_head_position(self):
         """Метод для получения текущей позиции головы змейки."""
@@ -160,23 +153,19 @@ def main():
     """Основная функция игры."""
     pg.init()
 
-
     clock = pg.time.Clock()
 
     snake = Snake()
     apple = Apple()
 
-    while True:
+    running = True
+    while running:
         clock.tick(SPEED)
 
         handle_keys(snake)
         snake.update_direction()
         snake.move()
         snake.eat(apple)
-
-        if snake.position == apple.position:
-            snake.length += 1
-            apple.randomize_position(snake.positions)
 
         if snake.position in snake.positions[1:]:
             snake.reset()
@@ -188,6 +177,12 @@ def main():
         apple.draw()
         pg.display.update()
 
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                running = False
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    running = False
 
     pg.quit()
 
