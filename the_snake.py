@@ -161,8 +161,7 @@ def main():
     snake = Snake()
     apple = Apple()
 
-    running = True
-    while running:
+    while True:
         clock.tick(SPEED)
 
         handle_keys(snake)
@@ -180,12 +179,6 @@ def main():
         apple.draw()
         pg.display.update()
 
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                running = False
-            elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_ESCAPE:
-                    running = False
 
     pg.quit()
 
