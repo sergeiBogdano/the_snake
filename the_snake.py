@@ -100,8 +100,10 @@ class Snake(GameObject):
         """Метод для перемещения змейки."""
         if self.length > 0:
             self.positions.insert(0, self.position)
-            self.positions.pop() if len(self.positions
-                                       ) > self.length + 1 else None
+            if len(self.positions) > self.length + 1:
+                self.positions.pop()
+            else:
+                None
 
         dx, dy = self.direction
         head_x, head_y = self.positions[0]
