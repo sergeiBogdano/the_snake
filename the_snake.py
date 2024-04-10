@@ -156,7 +156,6 @@ def main():
     """Основная функция игры."""
     pg.init()
 
-    clock = pg.time.Clock()
 
     snake = Snake()
     apple = Apple()
