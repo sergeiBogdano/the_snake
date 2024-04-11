@@ -109,7 +109,6 @@ class Snake(GameObject):
             self.direction = self.next_direction
             self.next_direction = None
 
-
     def reset(self):
         """Метод для сброса состояния змейки."""
         self.direction = random.choice(DIRECTIONS)
@@ -155,7 +154,6 @@ def main():
         if snake.get_head_position() == apple.position:
             snake.length += 1
             apple.randomize_position(snake.positions)
-
 
         snake.draw()
         apple.draw()
