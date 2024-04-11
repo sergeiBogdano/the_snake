@@ -82,7 +82,7 @@ class Snake(GameObject):
 
     def draw(self):
         """Метод для отрисовки змейки."""
-        screen.fill(BOARD_BACKGROUND_COLOR)  # Заливаем фон экрана
+        screen.fill(BOARD_BACKGROUND_COLOR)
 
         for position in self.positions:
             rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
@@ -92,24 +92,14 @@ class Snake(GameObject):
     def move(self):
         """Метод для перемещения змейки."""
         current_direction_x, current_direction_y = self.direction
-        head_x, head_y = self.get_head_position()  # Получаем позицию головы змейки
-
-        # Вычисляем новую позицию головы змейки
+        head_x, head_y = self.get_head_position()
         new_head_x = (head_x + current_direction_x * GRID_SIZE) % SCREEN_WIDTH
         new_head_y = (head_y + current_direction_y * GRID_SIZE) % SCREEN_HEIGHT
-
-        # Обновляем позицию головы змейки
         self.position = (new_head_x, new_head_y)
-
-        # Вставляем новую позицию головы в начало списка позиций змейки
         self.positions.insert(0, self.position)
-
-        # Проверяем столкновение головы с телом змейки
         if self.position in self.positions[1:]:
             self.reset()
             return
-
-        # Обрезаем список позиций, чтобы сохранить длину змейки
         if len(self.positions) > self.length:
             self.positions.pop()
 
