@@ -87,10 +87,10 @@ class Snake(GameObject):
             pg.draw.rect(screen, self.body_color, rect)
             pg.draw.rect(screen, BORDER_COLOR, rect, 1)
 
-            for position in self.positions[1:]:
-                rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
-                pg.draw.rect(screen, self.body_color, rect)
-                pg.draw.rect(screen, BORDER_COLOR, rect, 1)
+        for position in self.positions[1:]:
+            rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
+            pg.draw.rect(screen, self.body_color, rect)
+            pg.draw.rect(screen, BORDER_COLOR, rect, 1)
 
 
 
