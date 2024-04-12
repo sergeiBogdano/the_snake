@@ -82,15 +82,17 @@ class Snake(GameObject):
 
     def draw(self):
         """Метод для отрисовки змейки."""
-        for position in self.positions:
-            rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
-            pg.draw.rect(screen, self.body_color, rect)
-            pg.draw.rect(screen, BORDER_COLOR, rect, 1)
+        head_rect = pg.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
+        pg.draw.rect(screen, self.body_color, head_rect)
+        pg.draw.rect(screen, BORDER_COLOR, head_rect, 1)
 
         for position in self.positions[1:]:
-            rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
-            pg.draw.rect(screen, self.body_color, rect)
-            pg.draw.rect(screen, BORDER_COLOR, rect, 1)
+            body_rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
+            pg.draw.rect(screen, self.body_color, body_rect)
+            pg.draw.rect(screen, BORDER_COLOR, body_rect, 1)
+        if self.last:
+            tail_rect = pg.Rect(self.last, (GRID_SIZE, GRID_SIZE))
+            pg.draw.rect(screen, BOARD_BACKGROUND_COLOR, tail_rect)
 
     def move(self):
         """Метод для перемещения змейки."""
@@ -102,9 +104,9 @@ class Snake(GameObject):
         )
         self.positions.insert(0, self.position)
         if len(self.positions) > self.length:
-            self.positions.pop()
+            self.last = self.positions.pop()
         else:
-            pass
+            self.last = None
 
     def update_direction(self):
         """Метод для обновления направления движения змейки."""
@@ -160,14 +162,13 @@ def main():
             screen.fill(BOARD_BACKGROUND_COLOR)
             apple.randomize_position(snake.positions)
 
-        if snake.get_head_position() == apple.position:
+        elif snake.get_head_position() == apple.position:
             snake.length += 1
             apple.randomize_position(snake.positions)
 
         snake.draw()
         apple.draw()
         pg.display.update()
-        screen.fill(BOARD_BACKGROUND_COLOR)
 
     pg.quit()
 
