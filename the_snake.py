@@ -105,8 +105,8 @@ class Snake(GameObject):
         self.positions.insert(0, self.position)
         if len(self.positions) > self.length:
             self.positions.pop()
-        else:
-            None
+        else: None
+
     def update_direction(self):
         """Метод для обновления направления движения змейки."""
         if self.next_direction:
