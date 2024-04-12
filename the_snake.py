@@ -98,14 +98,13 @@ class Snake(GameObject):
         """Метод для перемещения змейки."""
         current_direction_x, current_direction_y = self.direction
         head_x, head_y = self.position
-        self.position = (
-            (head_x + current_direction_x * GRID_SIZE) % SCREEN_WIDTH,
-            (head_y + current_direction_y * GRID_SIZE) % SCREEN_HEIGHT
-        )
+        self.position = ((head_x + current_direction_x * GRID_SIZE) % SCREEN_WIDTH,
+            (head_y + current_direction_y * GRID_SIZE) % SCREEN_HEIGHT)
         self.positions.insert(0, self.position)
         if len(self.positions) > self.length:
             self.positions.pop()
-        else: None
+        else: 
+            None
 
     def update_direction(self):
         """Метод для обновления направления движения змейки."""
