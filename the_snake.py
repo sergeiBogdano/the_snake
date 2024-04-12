@@ -82,26 +82,33 @@ class Snake(GameObject):
 
     def draw(self):
         """Метод для отрисовки змейки."""
-        screen.fill(BOARD_BACKGROUND_COLOR)
 
         for position in self.positions:
             rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
             pg.draw.rect(screen, self.body_color, rect)
             pg.draw.rect(screen, BORDER_COLOR, rect, 1)
 
+            for position in self.positions[1:]:
+                rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
+                pg.draw.rect(screen, self.body_color, rect)
+                pg.draw.rect(screen, BORDER_COLOR, rect, 1)
+
+
+
     def move(self):
         """Метод для перемещения змейки."""
         current_direction_x, current_direction_y = self.direction
-        head_x, head_y = self.get_head_position()
-        new_head_x = (head_x + current_direction_x * GRID_SIZE) % SCREEN_WIDTH
-        new_head_y = (head_y + current_direction_y * GRID_SIZE) % SCREEN_HEIGHT
-        self.position = (new_head_x, new_head_y)
+        head_x, head_y = self.position
+        self.position = (
+            (head_x + current_direction_x * GRID_SIZE) % SCREEN_WIDTH,
+            (head_y + current_direction_y * GRID_SIZE) % SCREEN_HEIGHT
+        )
         self.positions.insert(0, self.position)
-        if self.position in self.positions[1:]:
-            self.reset()
-            return
         if len(self.positions) > self.length:
             self.positions.pop()
+
+        else:
+            None
 
     def update_direction(self):
         """Метод для обновления направления движения змейки."""
@@ -151,6 +158,12 @@ def main():
         handle_keys(snake)
         snake.update_direction()
         snake.move()
+
+        if snake.position in snake.positions[1:]:
+            snake.reset()
+            screen.fill(BOARD_BACKGROUND_COLOR)
+            apple.randomize_position(snake.positions)
+
         if snake.get_head_position() == apple.position:
             snake.length += 1
             apple.randomize_position(snake.positions)
@@ -158,6 +171,7 @@ def main():
         snake.draw()
         apple.draw()
         pg.display.update()
+        screen.fill(BOARD_BACKGROUND_COLOR)
 
     pg.quit()
 
