@@ -92,8 +92,6 @@ class Snake(GameObject):
             pg.draw.rect(screen, self.body_color, rect)
             pg.draw.rect(screen, BORDER_COLOR, rect, 1)
 
-
-
     def move(self):
         """Метод для перемещения змейки."""
         current_direction_x, current_direction_y = self.direction
@@ -106,7 +104,7 @@ class Snake(GameObject):
         if len(self.positions) > self.length:
             self.positions.pop()
         else:
-            None
+            pass
 
     def update_direction(self):
         """Метод для обновления направления движения змейки."""
